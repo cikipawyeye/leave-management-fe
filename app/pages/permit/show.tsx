@@ -55,7 +55,7 @@ export default function Show({ loaderData }: Route.ComponentProps) {
             <CardHeader>
               <div className="flex flex-wrap justify-between gap-4">
                 <div>
-                  <CardTitle>{data.title}</CardTitle>
+                  <CardTitle>{data.user?.name ?? data.title}</CardTitle>
                   <CardDescription>{data.type_label ?? stringToTitleCase(data.type)}</CardDescription>
                 </div>
 
@@ -82,6 +82,20 @@ export default function Show({ loaderData }: Route.ComponentProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2">
                 <div>
                   <div className="mb-2">
+                    <small>Title</small>
+                    <p>{data.title}</p>
+                  </div>
+                  <div className="mb-2">
+                    <small>Since</small>
+                    <p>{data.since ? formatLocaleDate(data.since) : '-'}</p>
+                  </div>
+                  <div className="mb-2">
+                    <small>Until</small>
+                    <p>{data.until ? formatLocaleDate(data.until) : '-'}</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-2">
                     <small>User</small>
                     <p>{data.user?.name}</p>
                   </div>
@@ -89,15 +103,9 @@ export default function Show({ loaderData }: Route.ComponentProps) {
                     <small>Status</small>
                     <p>{data.state_label ?? stringToTitleCase(data.state ?? '-')}</p>
                   </div>
-                </div>
-                <div>
                   <div className="mb-2">
-                    <small>Title</small>
-                    <p>{data.title}</p>
-                  </div>
-                  <div className="mb-2">
-                    <small>Date</small>
-                    <p>{data.created_at ? formatLocaleDate(data.created_at) : '-'}</p>
+                    <small>Last update</small>
+                    <p>{data.updated_at ? formatLocaleDate(data.updated_at) : '-'}</p>
                   </div>
                 </div>
                 <div className="sm:col-span-2">

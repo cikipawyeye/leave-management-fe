@@ -80,8 +80,11 @@ export interface Permit {
   type: 'sick' | 'leave' | 'other'
   title: string
   content: string
+  since?: string | null
+  until?: string | null
   state?: 'approved' | 'pending' | 'rejected' | 'revision' | 'canceled'
   created_at?: string
+  updated_at?: string
   state_label?: string
   user?: User
   type_label?: string
