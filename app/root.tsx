@@ -1,27 +1,33 @@
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router'
 
-import type { Route } from "./+types/root";
-import "./app.css";
+import type { Route } from './+types/root'
+import './app.css'
+import { LoaderCircle } from 'lucide-react'
+import { PermissionProvider } from './contexts/permission-context'
+import { Toaster } from './components/ui/sonner'
+import { AuthProvider } from './contexts/auth-context'
+import { initializeTheme } from './hooks/use-appearance'
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
+    rel: 'preconnect',
+    href: 'https://fonts.gstatic.com',
+    crossOrigin: 'anonymous'
   },
   {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap'
   },
-];
+  {
+    rel: 'preconnect',
+    href: 'https://fonts.bunny.net'
+  },
+  {
+    rel: 'stylesheet',
+    href: 'https://fonts.bunny.net/css?family=instrument-sans:400,500,600'
+  }
+]
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -33,32 +39,42 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <AuthProvider>
+          <PermissionProvider>{children}</PermissionProvider>
+        </AuthProvider>
         <ScrollRestoration />
         <Scripts />
+        <Toaster />
       </body>
     </html>
-  );
+  )
+}
+
+export function HydrateFallback() {
+  return (
+    <div className="flex items-center justify-center w-full h-screen">
+      <LoaderCircle className="h-4 w-4 animate-spin" />
+    </div>
+  )
 }
 
 export default function App() {
-  return <Outlet />;
+  initializeTheme();
+  return <Outlet />
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  let message = 'Oops!'
+  let details = 'An unexpected error occurred.'
+  let stack: string | undefined
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? '404' : 'Error'
     details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+      error.status === 404 ? 'The requested page could not be found.' : error.statusText || details
   } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    details = error.message
+    stack = error.stack
   }
 
   return (
@@ -71,5 +87,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
-  );
+  )
 }
